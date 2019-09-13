@@ -63,7 +63,7 @@ $(document).ready(function() {
       })
         .then(function(response) {
           var results = response;
-
+          console.log(queryURL)
           for(var i=0;i<results.length;i++){
             var holderBody = $("<tbody>")
             var holderRow = $("<tr>");
