@@ -1,0 +1,20 @@
+.leftimage {
+    max-width: 85%;
+    float: left;
+}
+
+.rightimage {
+    max-width: 100%;
+    float: right;
+}
+
+.jumbotron{
+    background-color: cornsilk
+}
+
+#steps {
+    column-count: 2;
+    column-gap: 20px;
+    list-style: none;
+
+}
