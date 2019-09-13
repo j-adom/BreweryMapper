@@ -6,11 +6,37 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+=======
+    <link rel="stylesheet" href="assets/style.css">
+
 </head>
 <body>
+  <div class="container"  >
+    <div class="jumbotron">
+      <div class="row">
+          <div class="col-sm-4">
+            <img class="leftimage" src="assets/images/beerflight.jpg">
+          </div>
+          <div class="col-sm-8">
+              <h1>Beerhiker's Guide to the Breweries</h1>
+          </div>
+      </div>
+      <hr class="my-4">
+      <h2>Planning a brewery tour? We're here to help!</h2>
+      <ul >
+          <li>Search for breweries in a given state</li>
+          <li>Make your own custom list of breweries</li>
+          <li>See them on a map!</li>
+      </ul>
+      <p class="lead">
+          <a class="btn btn-secondary btn-lg" href="forms.html" role="button">Get started!</a>
+      </p>
+    </div>
+    
     <div class="card">
-        <div class="card-header">
+        <div class="card-header bg-secondary text-white">
           Map
         </div>
         <div class="card-body">
@@ -19,7 +45,7 @@
       </div>
 
       <div class="card">
-        <div class="card-header">
+        <div class="card-header bg-secondary text-white">
           List of Breweries
         </div>
         <div class="card-body">
@@ -35,16 +61,24 @@
                         <td>placeholder</td>
                     </tr>
                 </tbody>
-               
+              
             </table>
             <input class="btn btn-primary" type="submit" value="Submit">
+          </div>
         </div>
       </div>
 
+
     
   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="assets/javascript/app.js"></script>
+    
+    
+    
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <script src="assets/javascript/app.js"></script>  
+  </div>
+
 </body>
 </html>
