@@ -68,18 +68,22 @@
             <table class="table">
                 <thead>
                     <tr>
-                    <th scope="col">placeholder</th>
-                    
+                    <th scope="col"> </th>
+                    <th scope="col">Name</th>
+                    <th scope="col">State</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Street</th>
+                    <th scope="col">More Info</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>placeholder</td>
-                    </tr>
+                <tbody id="list-area">
+
                 </tbody>
+                
+                
               
             </table>
-            <input class="btn btn-primary" type="submit" value="Submit">
+            <button type="submit" class="btn btn-primary" id="remove-button">Remove the chosen breweries from the list</button>
           </div>
         </div>
       </div>
@@ -130,66 +134,30 @@
          *
          * @param  {H.Map} map      A HERE Map instance within the application
          */
-        var numBrews = 2;
-        function addMarkersToMap(map) {
-          for(var i=0;i< numBrews;i++) {
-            let currentBrewery = localStorage.getItem('brew'+ i)
-            console.log(currentBrewery)
-            let latitude = currentBrewery.latitude
-            let longitude = currentBrewery.longitude
-            let stop = new H.map.Marker({lat:latitude, lng:longitude});
-            map.addObject(stop);
-          }
-        }
-            // var romeMarker = new H.map.Marker({lat:41.9, lng: 12.5});
-            // map.addObject(romeMarker);
-
-            // var berlinMarker = new H.map.Marker({lat:52.5166, lng:13.3833});
-            // map.addObject(berlinMarker);
-
-            // var madridMarker = new H.map.Marker({lat:40.4, lng: -3.6833});
-            // map.addObject(madridMarker);
-
-            // var londonMarker = new H.map.Marker({lat:51.5008, lng:-0.1224});
-            // map.addObject(londonMarker);
-        
-
-        /**
-         * Boilerplate map initialization code starts below:
-         */
-
-        //Step 1: initialize communication with the platform
-        // In your own code, replace variable window.apikey with your own apikey
-        var platform = new H.service.Platform({
-          apikey: 'ZJV0UQd_-AXRmjvUV2btEe9nAIsJA4HNlvtZggxgRC8'
-        });
-        var defaultLayers = platform.createDefaultLayers();
-
-        //Step 2: initialize a map - this map is centered over Europe
-        var map = new H.Map(document.getElementById('mapContainer'),
-          defaultLayers.vector.normal.map,{
-          center: {lat:37.0902, lng:95.7129},
-          zoom: 4,
-          pixelRatio: window.devicePixelRatio || 1
-        });
-        // add a resize listener to make sure that the map occupies the whole container
-        window.addEventListener('resize', () => map.getViewPort().resize());
-
-        //Step 3: make the map interactive
-        // MapEvents enables the event system
-        // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
-        var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
-        // Create the default UI components
-        var ui = H.ui.UI.createDefault(map, defaultLayers);
-
-        // Now use the map as required...
-        window.onload = function () {
-          addMarkersToMap(map);
-        }                  
-
+    
       </script>
   </div>
+
+
+  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle modalTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+           
+          </div>
+        </div>
+      </div>
+    </div>
 
 </body>
 </html>
