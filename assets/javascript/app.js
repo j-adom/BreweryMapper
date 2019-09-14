@@ -70,10 +70,10 @@ $(document).ready(function() {
         getResults = JSON.parse(localStorage.getItem("brew"+i));
         
   
-        var holderBody = $("<tbody>")
+        // var holderBody = $("<tbody>")
         var holderRow = $("<tr>");
   
-        holderBody.append(holderRow);
+        // holderBody.append(holderRow);
   
         var holderName = $("<td>");
         holderName.text(getResults.name);
@@ -86,17 +86,21 @@ $(document).ready(function() {
   
         var holderStreet = $("<td>");
         holderStreet.text(getResults.street);
+
+        var holderModal = $("<button type='button' class='btn btn-primary modalButton' data-toggle='modal' data-target='#exampleModalLong' id='modal'>");
+        holderModal.text("Click for more Info");
   
         var radio = $("<div class='form-check'>");
         var input = $("<input class='form-check-input' type='checkbox' value='"+i+"' id='checkbox"+i+"'>");
         radio.append(input);
-  
+        
+        holderRow.append(radio);
         holderRow.append(holderName);
         holderRow.append(holderState);
         holderRow.append(holderCity);
         holderRow.append(holderStreet);
-        holderRow.append(radio);
-        $("#list-area").append(holderBody);
+        holderRow.append(holderModal);
+        $("#list-area").append(holderRow);
   
       }
     }
@@ -180,6 +184,12 @@ $(document).ready(function() {
         }
       }
       fixStorage();
+    });
+
+    $(document).on("click",".modalButton", function() {
+      event.preventDefault();
+      console.log("test");
+      $("#modalTitle").text("test");
     });
 
     getNumStorage();
