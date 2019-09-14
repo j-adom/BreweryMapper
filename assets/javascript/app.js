@@ -18,6 +18,9 @@ var numBrews=0;
 var results;
 var getResults;
 var x =0;
+var startLatitude;
+var startLongitude;
+var map;
 
 $(document).ready(function() {
 
@@ -198,9 +201,73 @@ $(document).ready(function() {
       mymodal.find('.modal-body').html(myBrew.website_url +"<br>"+ myBrew.state+" "+myBrew.city+" "+myBrew.street);
       mymodal.modal('show');
     });
+    
+
+    // Begin Map code
+    function addMarkersToMap(map) {
+     
+      for(var i=0;i< numBrews;i++) {
+        let currentBrewery = JSON.parse(localStorage.getItem('brew'+ i))
+        console.log(currentBrewery)
+        let latitude = currentBrewery.latitude
+        let longitude = currentBrewery.longitude
+        console.log(currentBrewery.longitude)
+        let stop = new H.map.Marker({lat:latitude, lng:longitude});
+        map.addObject(stop);
+      }
+    }
+
+      function centerMap(){
+        var temp = JSON.parse(localStorage.getItem("brew0"))
+         startLatitude = temp.latitude;
+         startLongitude = temp.longitude
+      
+        
+            /**
+     * Boilerplate map initialization code starts below:
+     */
+
+    //Step 1: initialize communication with the platform
+    // In your own code, replace variable window.apikey with your own apikey
+    var platform = new H.service.Platform({
+      apikey: 'ZJV0UQd_-AXRmjvUV2btEe9nAIsJA4HNlvtZggxgRC8'
+    });
+    var defaultLayers = platform.createDefaultLayers();
+
+    //Step 2: initialize a map - this map is centered over Europe
+
+    map = new H.Map(document.getElementById('mapContainer'),
+      defaultLayers.vector.normal.map,{
+      center: {lat:startLatitude, lng:startLongitude},
+      zoom: 8,
+      pixelRatio: window.devicePixelRatio || 1
+    });
+    // add a resize listener to make sure that the map occupies the whole container
+    window.addEventListener('resize', () => map.getViewPort().resize());
+
+    //Step 3: make the map interactive
+    // MapEvents enables the event system
+    // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+    // Create the default UI components
+    var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+    // Now use the map as required...
+    // window.onload = function () {
+    // } 
+      }
+    
+                     
+
+    
+     
 
     getNumStorage();
     indexListCreate();
+    centerMap();
+    addMarkersToMap(map);
 
 });
+
 

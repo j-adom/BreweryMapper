@@ -5,11 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    
+    
+    <!-- JQuery JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+    <!-- Map Responsiveness for Mobile -->
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+    <!-- Here Maps Links  -->
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+      
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Project CSS -->
     <link rel="stylesheet" href="assets/style.css">
-
+    
 </head>
 <body>
   <div class="container"  >
@@ -39,7 +55,8 @@
           Map
         </div>
         <div class="card-body">
-          <p>placeholder for map</p>
+          <div style="width: 640px; height: 480px" id="mapContainer"></div>
+        </div>
         </div>
       </div>
 
@@ -81,6 +98,44 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
       <script src="assets/javascript/app.js"></script>  
+      
+      <!-- Map Creation Script -->
+      <script>
+        // var platform = new H.service.Platform({'apikey':'ZJV0UQd_-AXRmjvUV2btEe9nAIsJA4HNlvtZggxgRC8  '});
+
+        // // Obtain the default map types from the platform object:
+        // var defaultLayers = platform.createDefaultLayers();
+
+        // // Instantiate (and display) a map object:
+        // var map = new H.Map(
+        // document.getElementById('mapContainer'),
+        // defaultLayers.vector.normal.map,
+        //   {
+        //     zoom: 10,
+        //     center: { lat: 36.1627, lng: -86.7816 }
+        //   });
+        
+          // Static Map Image example
+          // let queryUrl = 'https://image.maps.api.here.com/mia/1.6/mapview?poi='
+          // let stoplat0 = '41.8625'
+          // let stoplon0 = '-87.6166'
+          // let stoplat1 = '41.94833'
+          // let stoplon1 = '-87.6555'
+          // let app_id = '&app_id=G0w0BwoBgUMsWAqLqAUt'
+          // let app_code = '&app_code=DydDr5XLCC4xSncKzC_OxA'
+            
+          // var mapLink = queryUrl + stoplat0 + '%2C' + stoplon0 + '%2C' + stoplat1 + '%2C' + stoplon1 + app_id + app_code
+          
+          // $("#mapContainer").append($("<img src='"+ mapLink +"'>"))
+
+              /**
+         * Adds markers to the map highlighting the locations of the captials of
+         * France, Italy, Germany, Spain and the United Kingdom.
+         *
+         * @param  {H.Map} map      A HERE Map instance within the application
+         */
+    
+      </script>
   </div>
 
 
