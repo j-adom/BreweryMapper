@@ -87,7 +87,7 @@ $(document).ready(function() {
         var holderStreet = $("<td>");
         holderStreet.text(getResults.street);
 
-        var holderModal = $("<button type='button' class='btn btn-primary modalButton' data-toggle='modal' data-target='#exampleModalLong' id='modal'>");
+        var holderModal = $("<button type='button' class='btn btn-primary modalButton' data-value="+i+" data-toggle='modal' data-target='#exampleModalLong' id='modal'>");
         holderModal.text("Click for more Info");
   
         var radio = $("<div class='form-check'>");
@@ -186,10 +186,17 @@ $(document).ready(function() {
       fixStorage();
     });
 
-    $(document).on("click",".modalButton", function() {
-      event.preventDefault();
-      console.log("test");
-      $("#modalTitle").text("test");
+    $(document).on("click",".modalButton", function(e) {
+      e.preventDefault();
+      var position = $(this).data("value");
+      var myBrew = JSON.parse(localStorage.getItem("brew"+position));
+      
+      var mymodal = $('#exampleModalLong');
+
+      mymodal.find('.modal-title').text(myBrew.name);
+
+      mymodal.find('.modal-body').html(myBrew.website_url +"<br>"+ myBrew.state+" "+myBrew.city+" "+myBrew.street);
+      mymodal.modal('show');
     });
 
     getNumStorage();
