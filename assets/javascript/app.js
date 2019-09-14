@@ -13,6 +13,11 @@ var searchCity;
 var searchState;
 var searchName;
 var searchType;
+var numResults=0;
+var numBrews=0;
+var results;
+var getResults;
+var x =0;
 
 $(document).ready(function() {
 
@@ -33,6 +38,67 @@ $(document).ready(function() {
             dropdown.append(option);
         }
 
+    }
+
+    function getNumStorage(){
+        while(localStorage.getItem("brew"+x)!=null){
+          numBrews++;
+          x++;
+        }
+    }
+
+
+    function fixStorage(){
+      for(var i=0;i<numBrews;i++){
+        
+        if(localStorage.getItem("brew"+i)=="null"){
+          
+          for(var j = i;j<numBrews;j++){
+            localStorage.setItem("brew"+j,localStorage.getItem("brew"+(j+1)));
+          }
+          numBrews--;
+          localStorage.removeItem("brew"+numBrews);
+        }
+      }
+      indexListCreate();
+    }
+
+    function indexListCreate(){
+      $("#list-area").empty();
+      for(var i=0;i<numBrews;i++){
+      
+        getResults = JSON.parse(localStorage.getItem("brew"+i));
+        
+  
+        var holderBody = $("<tbody>")
+        var holderRow = $("<tr>");
+  
+        holderBody.append(holderRow);
+  
+        var holderName = $("<td>");
+        holderName.text(getResults.name);
+  
+        var holderState = $("<td>");
+        holderState.text(getResults.state);
+  
+        var holderCity = $("<td>");
+        holderCity.text(getResults.city);
+  
+        var holderStreet = $("<td>");
+        holderStreet.text(getResults.street);
+  
+        var radio = $("<div class='form-check'>");
+        var input = $("<input class='form-check-input' type='checkbox' value='"+i+"' id='checkbox"+i+"'>");
+        radio.append(input);
+  
+        holderRow.append(holderName);
+        holderRow.append(holderState);
+        holderRow.append(holderCity);
+        holderRow.append(holderStreet);
+        holderRow.append(radio);
+        $("#list-area").append(holderBody);
+  
+      }
     }
     
 
@@ -62,14 +128,23 @@ $(document).ready(function() {
         method: "GET"
       })
         .then(function(response) {
-          var results = response;
-          console.log(queryURL)
+          results = response;
+          numResults = results.length;
+          
           for(var i=0;i<results.length;i++){
             var holderBody = $("<tbody>")
             var holderRow = $("<tr>");
+            
+            var radio = $("<div class='form-check'>");
+            var input = $("<input class='form-check-input' type='checkbox' value='"+i+"' id='checkbox"+i+"'>");
+            radio.append(input);
+
             holderBody.append(holderRow);
+            holderRow.append(radio);
+
             var holder = $("<td>");
             holder.text(results[i].name);
+
             holderRow.append(holder);
             $("#results-area").append(holderBody);
 
@@ -78,4 +153,37 @@ $(document).ready(function() {
 
     });
 
+
+
+
+
+    $("#result-submit").on("click", function() {
+      event.preventDefault();
+      for(var i=0;i<numResults;i++){
+    
+        if($('#checkbox'+i).prop('checked')){
+          
+          localStorage.setItem("brew"+numBrews,JSON.stringify(results[i]));
+          numBrews++;
+        }
+      }
+    });
+
+    $("#remove-button").on("click", function() {
+      event.preventDefault();
+      for(var i=0;i<numBrews;i++){
+    
+        if($('#checkbox'+i).prop('checked')){
+          
+          localStorage.setItem("brew"+i,null);
+          
+        }
+      }
+      fixStorage();
+    });
+
+    getNumStorage();
+    indexListCreate();
+
 });
+
