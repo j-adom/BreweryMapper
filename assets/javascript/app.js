@@ -207,6 +207,9 @@ $(document).ready(function() {
       }
       fixStorage();
       indexListCreate();
+      $("#mapContainer").empty();
+      centerMap();
+      addMarkersToMap(map);
     });
 
     $(document).on("click",".modalButton", function(e) {
@@ -298,8 +301,8 @@ $(document).ready(function() {
 
     getNumStorage();
     indexListCreate();
-      centerMap();
-      addMarkersToMap(map);
+    centerMap();
+    addMarkersToMap(map);
     
 });
 
