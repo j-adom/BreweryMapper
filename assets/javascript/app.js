@@ -20,6 +20,7 @@ var getResults;
 var x =0;
 var startLatitude;
 var startLongitude;
+var objectArray = [];
 var map;
 
 $(document).ready(function() {
@@ -208,13 +209,31 @@ $(document).ready(function() {
      
       for(var i=0;i< numBrews;i++) {
         let currentBrewery = JSON.parse(localStorage.getItem('brew'+ i))
-        console.log(currentBrewery)
         let latitude = currentBrewery.latitude
         let longitude = currentBrewery.longitude
-        console.log(currentBrewery.longitude)
-        let stop = new H.map.Marker({lat:latitude, lng:longitude});
-        map.addObject(stop);
+        objectArray.push({latitude: latitude, longitude: longitude})
       }
+        
+      var dataPoints = objectArray.map(function (item) {
+        return new H.clustering.DataPoint(item.latitude, item.longitude);
+      });
+    
+      // Create a clustering provider with custom options for clusterizing the input
+      var clusteredDataProvider = new H.clustering.Provider(dataPoints, {
+        clusteringOptions: {
+          // Maximum radius of the neighbourhood
+          eps: 8,
+          // minimum weight of points required to form a cluster
+          minWeight: 2
+        }
+      });
+
+      // Create a layer tha will consume objects from our clustering provider
+      var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
+
+      // To make objects from clustering provder visible,
+      // we need to add our layer to the map
+      map.addLayer(clusteringLayer);
     }
 
       function centerMap(){
@@ -234,7 +253,7 @@ $(document).ready(function() {
     });
     var defaultLayers = platform.createDefaultLayers();
 
-    //Step 2: initialize a map - this map is centered over Europe
+    //Step 2: initialize a map - this map is centered the first stop in the user list (brew0)
 
     map = new H.Map(document.getElementById('mapContainer'),
       defaultLayers.vector.normal.map,{
