@@ -21,7 +21,6 @@ var startLatitude;
 var startLongitude;
 var objectArray = [];
 var map;
-var imageCluster = "assets/images/pintscluster.jpg"
 
 $(document).ready(function() {
 
@@ -86,6 +85,9 @@ $(document).ready(function() {
   
         // holderBody.append(holderRow);
   
+        var holderNumber = $("<td>");
+        holderNumber.text(i+1);
+
         var holderName = $("<td>");
         holderName.text(getResults.name);
   
@@ -101,11 +103,16 @@ $(document).ready(function() {
         var holderModal = $("<button type='button' class='btn btn-primary modalButton' data-value="+i+" data-toggle='modal' data-target='#exampleModalLong' id='modal'>");
         holderModal.text("Click for more Info");
   
-        var radio = $("<div class='form-check'>");
-        var input = $("<input class='form-check-input' type='checkbox' value='"+i+"' id='checkbox"+i+"'>");
-        radio.append(input);
+        // var radio = $("<form action='#'>");
+        var holderButton = $("<td>");
+        var label = $("<label>");
+        var input = $("<input type='checkbox' value='"+i+"' id='checkbox"+i+"'>");
+        var span = $("<span>"+(i+1)+"</span>");
+        holderButton.append(label);
+        label.append(input);
+        label.append(span);
         
-        holderRow.append(radio);
+        holderRow.append(holderButton);
         holderRow.append(holderName);
         holderRow.append(holderState);
         holderRow.append(holderCity);
@@ -162,12 +169,16 @@ $(document).ready(function() {
             var holderBody = $("<tbody>")
             var holderRow = $("<tr>");
             
-            var radio = $("<div class='form-check'>");
-            var input = $("<input class='form-check-input' type='checkbox' value='"+i+"' id='checkbox"+i+"'>");
-            radio.append(input);
+            var holderButton = $("<td>");
+            var label = $("<label>");
+            var input = $("<input type='checkbox' value='"+i+"' id='checkbox"+i+"'>");
+            var span = $("<span> </span>");
+            holderButton.append(label);
+            label.append(input);
+            label.append(span);
 
             holderBody.append(holderRow);
-            holderRow.append(radio);
+            holderRow.append(holderButton);
 
             var holder = $("<td>");
             holder.text(results[i].name);
@@ -229,29 +240,29 @@ $(document).ready(function() {
     
 
     // Begin Map code
-    function addMarkersToMap(map) {
+
+
+
+    function addMarkersToMap(map, ui) {
      //Loop through list of breweries to make object containing latitude and longitude as well as svg icon corresponding to the number of the brewery
+     var mapIconSVGtemplate = '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><rect stroke="white" fill="#1b468d" x="1" y="1" width="22" height="22" /><text x="12" y="18" font-size="12pt" font-family="Arial" font-weight="bold" text-anchor="middle" fill="white">{brewNum}</text></svg>';
+
+     objectArray = [];
       for(var i=0;i< numBrews;i++) {
         if(localStorage.getItem("brew"+i)!="null"){
           let currentBrewery = JSON.parse(localStorage.getItem('brew'+ i))
           let latitude = currentBrewery.latitude
           let longitude = currentBrewery.longitude
-          
-          let svgMarkup = '<svg width="24" height="24" ' +
-            'xmlns="http://www.w3.org/2000/svg">' +
-            '<rect stroke="white" fill="#1b468d" x="1" y="1" width="22" ' +
-            'height="22" /><text x="12" y="18" font-size="12pt" ' +
-            'font-family="Arial" font-weight="bold" text-anchor="middle" ' +
-            'fill="white">'+i+1+'</text></svg>';
+          let stopNumber = i + 1
+          let mapIconString = 'https://mapicons.mapsmarker.com/wp-content/uploads/mapicons/shape-default/color-de9f21/shapecolor-light/shadow-1/border-color/symbolstyle-color/symbolshadowstyle-no/gradient-bottomtop/number_'+ stopNumber +'.png';
+          console.log(mapIconString)
         
-          let icon = new H.map.icon(svgMarkup)
-
-
-          objectArray.push({latitude: latitude, longitude: longitude},{icon: icon})
+          objectArray.push({latitude: latitude, longitude: longitude, icon: mapIconString})
         }
       }
       console.log(objectArray) 
       var dataPoints = objectArray.map(function (item) {
+        console.log(item.latitude)
         return new H.clustering.DataPoint(item.latitude, item.longitude, null, item);
       });
     
@@ -266,7 +277,7 @@ $(document).ready(function() {
         theme: CUSTOM_THEME
       });
 
-      clusteredDataProvider.addEventListener('tap', onMarkerClick);
+      // clusteredDataProvider.addEventListener('tap', onMarkerClick);
 
       // Create a layer tha will consume objects from our clustering provider
       var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
@@ -274,18 +285,21 @@ $(document).ready(function() {
       // To make objects from clustering provder visible,
       // we need to add our layer to the map
       map.addLayer(clusteringLayer);
+      map.getViewModel()
     }
-
+    var mapClusterSVGtemplate = '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><rect stroke="white" fill="#1b468d" x="1" y="1" width="22" height="22" /><text x="12" y="18" font-size="12pt" font-family="Arial" font-weight="bold" text-anchor="middle" fill="white">{brewNum}</text></svg>';
+    
     // Custom clustering theme description object.
     // Object should implement H.clustering.ITheme interface
     var CUSTOM_THEME = {
       getClusterPresentation: function(cluster) {
         
-        // Set cluster marker to pints image
+        // Set cluster image
         var clusterMarker = new H.map.Marker(cluster.getPosition(), {
-          icon: new H.map.Icon(imageCluster, {
+          icon: new H.map.Icon('https://upload.wikimedia.org/wikipedia/commons/a/ad/Twemoji2_1f37b.svg', {
             size: {w: 50, h: 50},
-            anchor: {x: 25, y: 25}
+            anchor: {x: 25, y: 25},
+            crossOrigin: false,
           }),
 
           // Set min/max zoom with values from the cluster,
@@ -302,21 +316,23 @@ $(document).ready(function() {
       },
       getNoisePresentation: function (noisePoint) {
         // Get a reference to data object our noise points
-        var data = noisePoint.getData(),
+        var data = noisePoint.getData()
+        console.log(data.icon)
           // Create a marker for the noisePoint
-          noiseMarker = new H.map.Marker(noisePoint.getPosition(), {
+        var noiseMarker = new H.map.Marker(noisePoint.getPosition(), {
             // Use min zoom from a noise point
             // to show it correctly at certain zoom levels:
             min: noisePoint.getMinZoom(),
             icon: new H.map.Icon(data.icon, {
               size: {w: 20, h: 20},
-              anchor: {x: 10, y: 10}
+              anchor: {x: 10, y: 10},
+              crossOrigin: false,
             })
           });
 
         // Link a data from the point to the marker
         // to make it accessible inside onMarkerClick
-        noiseMarker.setData(data);
+        noiseMarker.setData(noisePoint);
 
         return noiseMarker;
       }
