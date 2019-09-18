@@ -267,7 +267,7 @@ $(document).ready(function() {
           let latitude = currentBrewery.latitude
           let longitude = currentBrewery.longitude
           let stopNumber = i + 1
-          let mapIconString = 'https://mapicons.mapsmarker.com/wp-content/uploads/mapicons/shape-default/color-de9f21/shapecolor-light/shadow-1/border-color/symbolstyle-color/symbolshadowstyle-no/gradient-bottomtop/number_'+ stopNumber +'.png';
+          let mapIconString = 'assets/images/mapicons/number_'+ stopNumber +'.png';
           console.log(mapIconString)
         
           objectArray.push({latitude: latitude, longitude: longitude, icon: mapIconString})
