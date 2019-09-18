@@ -227,7 +227,7 @@ $(document).ready(function() {
     function addMarkersToMap(map) {
      
       for(var i=0;i< numBrews;i++) {
-        if(localStorage.getItem("brew0")!="null"){
+        if(localStorage.getItem("brew"+i)!="null"){
           let currentBrewery = JSON.parse(localStorage.getItem('brew'+ i))
           
           let latitude = currentBrewery.latitude
