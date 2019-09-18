@@ -164,7 +164,7 @@ $(document).ready(function() {
         .then(function(response) {
           results = response;
           numResults = results.length;
-          
+          console.log(queryURL);
           for(var i=0;i<results.length;i++){
             var holderBody = $("<tbody>")
             var holderRow = $("<tr>");
@@ -181,9 +181,22 @@ $(document).ready(function() {
             holderRow.append(holderButton);
 
             var holder = $("<td>");
-            holder.text(results[i].name);
+            holder.html("<a href="+results[i].website_url+">"+results[i].name+"</a>");
+
+            var holderCity = $("<td>");
+            holderCity.text(results[i].city);
+
+            var holderStreet = $("<td>");
+            holderStreet.text(results[i].street);
+
+            var holderTags = $("<td>");
+            holderTags.text(results[i].brewery_type);
 
             holderRow.append(holder);
+            holderRow.append(holderCity);
+            holderRow.append(holderStreet);
+            holderRow.append(holderTags);
+
             $("#results-area").append(holderBody);
 
           }
