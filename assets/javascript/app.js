@@ -240,19 +240,30 @@ $(document).ready(function() {
     
 
     // Begin Map code
-    function addMarkersToMap(map) {
+
+
+
+    function addMarkersToMap(map, ui) {
+     //Loop through list of breweries to make object containing latitude and longitude as well as svg icon corresponding to the number of the brewery
+     var mapIconSVGtemplate = '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><rect stroke="white" fill="#1b468d" x="1" y="1" width="22" height="22" /><text x="12" y="18" font-size="12pt" font-family="Arial" font-weight="bold" text-anchor="middle" fill="white">{brewNum}</text></svg>';
+
      objectArray = [];
       for(var i=0;i< numBrews;i++) {
         if(localStorage.getItem("brew"+i)!="null"){
           let currentBrewery = JSON.parse(localStorage.getItem('brew'+ i))
           let latitude = currentBrewery.latitude
           let longitude = currentBrewery.longitude
-          objectArray.push({latitude: latitude, longitude: longitude})
+          let stopNumber = i + 1
+          let mapIconString = 'https://mapicons.mapsmarker.com/wp-content/uploads/mapicons/shape-default/color-de9f21/shapecolor-light/shadow-1/border-color/symbolstyle-color/symbolshadowstyle-no/gradient-bottomtop/number_'+ stopNumber +'.png';
+          console.log(mapIconString)
+        
+          objectArray.push({latitude: latitude, longitude: longitude, icon: mapIconString})
         }
       }
-        
+      console.log(objectArray) 
       var dataPoints = objectArray.map(function (item) {
-        return new H.clustering.DataPoint(item.latitude, item.longitude);
+        console.log(item.latitude)
+        return new H.clustering.DataPoint(item.latitude, item.longitude, null, item);
       });
     
       // Create a clustering provider with custom options for clusterizing the input
@@ -262,8 +273,11 @@ $(document).ready(function() {
           eps: 8,
           // minimum weight of points required to form a cluster
           minWeight: 2
-        }
+        },
+        theme: CUSTOM_THEME
       });
+
+      // clusteredDataProvider.addEventListener('tap', onMarkerClick);
 
       // Create a layer tha will consume objects from our clustering provider
       var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
@@ -271,7 +285,58 @@ $(document).ready(function() {
       // To make objects from clustering provder visible,
       // we need to add our layer to the map
       map.addLayer(clusteringLayer);
+      map.getViewModel()
     }
+    var mapClusterSVGtemplate = '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><rect stroke="white" fill="#1b468d" x="1" y="1" width="22" height="22" /><text x="12" y="18" font-size="12pt" font-family="Arial" font-weight="bold" text-anchor="middle" fill="white">{brewNum}</text></svg>';
+    
+    // Custom clustering theme description object.
+    // Object should implement H.clustering.ITheme interface
+    var CUSTOM_THEME = {
+      getClusterPresentation: function(cluster) {
+        
+        // Set cluster image
+        var clusterMarker = new H.map.Marker(cluster.getPosition(), {
+          icon: new H.map.Icon('https://upload.wikimedia.org/wikipedia/commons/a/ad/Twemoji2_1f37b.svg', {
+            size: {w: 50, h: 50},
+            anchor: {x: 25, y: 25},
+            crossOrigin: false,
+          }),
+
+          // Set min/max zoom with values from the cluster,
+          // otherwise clusters will be shown at all zoom levels:
+          min: cluster.getMinZoom(),
+          max: cluster.getMaxZoom()
+        });
+
+        // Link data from the cluster to the marker,
+        // to make it accessible inside onMarkerClick
+        clusterMarker.setData(cluster);
+
+        return clusterMarker;
+      },
+      getNoisePresentation: function (noisePoint) {
+        // Get a reference to data object our noise points
+        var data = noisePoint.getData()
+        console.log(data.icon)
+          // Create a marker for the noisePoint
+        var noiseMarker = new H.map.Marker(noisePoint.getPosition(), {
+            // Use min zoom from a noise point
+            // to show it correctly at certain zoom levels:
+            min: noisePoint.getMinZoom(),
+            icon: new H.map.Icon(data.icon, {
+              size: {w: 20, h: 20},
+              anchor: {x: 10, y: 10},
+              crossOrigin: false,
+            })
+          });
+
+        // Link a data from the point to the marker
+        // to make it accessible inside onMarkerClick
+        noiseMarker.setData(noisePoint);
+
+        return noiseMarker;
+      }
+    };
 
       function centerMap(){
         if(localStorage.getItem("brew0")){
