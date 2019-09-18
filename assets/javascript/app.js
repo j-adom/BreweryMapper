@@ -103,12 +103,16 @@ $(document).ready(function() {
         var holderModal = $("<button type='button' class='btn btn-primary modalButton' data-value="+i+" data-toggle='modal' data-target='#exampleModalLong' id='modal'>");
         holderModal.text("Click for more Info");
   
-        var radio = $("<div class='form-check'>");
-        var input = $("<input class='form-check-input' type='checkbox' value='"+i+"' id='checkbox"+i+"'>");
-        radio.append(input);
+        // var radio = $("<form action='#'>");
+        var holderButton = $("<td>");
+        var label = $("<label>");
+        var input = $("<input type='checkbox' value='"+i+"' id='checkbox"+i+"'>");
+        var span = $("<span>"+(i+1)+"</span>");
+        holderButton.append(label);
+        label.append(input);
+        label.append(span);
         
-        holderRow.append(radio);
-        holderRow.append(holderNumber);
+        holderRow.append(holderButton);
         holderRow.append(holderName);
         holderRow.append(holderState);
         holderRow.append(holderCity);
@@ -165,12 +169,16 @@ $(document).ready(function() {
             var holderBody = $("<tbody>")
             var holderRow = $("<tr>");
             
-            var radio = $("<div class='form-check'>");
-            var input = $("<input class='form-check-input' type='checkbox' value='"+i+"' id='checkbox"+i+"'>");
-            radio.append(input);
+            var holderButton = $("<td>");
+            var label = $("<label>");
+            var input = $("<input type='checkbox' value='"+i+"' id='checkbox"+i+"'>");
+            var span = $("<span> </span>");
+            holderButton.append(label);
+            label.append(input);
+            label.append(span);
 
             holderBody.append(holderRow);
-            holderRow.append(radio);
+            holderRow.append(holderButton);
 
             var holder = $("<td>");
             holder.text(results[i].name);
@@ -233,7 +241,7 @@ $(document).ready(function() {
 
     // Begin Map code
     function addMarkersToMap(map) {
-     
+     objectArray = [];
       for(var i=0;i< numBrews;i++) {
         if(localStorage.getItem("brew"+i)!="null"){
           let currentBrewery = JSON.parse(localStorage.getItem('brew'+ i))
