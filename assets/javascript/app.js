@@ -7,7 +7,6 @@ var stateArray = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado
 'West Virginia','Wisconsin','Wyoming']
 
 var typeArray = ["Micro", "Regional", "Brewpub", "Large", "Planning", "Bar", "Contract", "Proprietor"];
-var tagsArray = ["Dog-friendly", "Patio", "Food-service", "Food-truck", "Tours"];
 
 var searchCity;
 var searchState;
@@ -44,6 +43,8 @@ $(document).ready(function() {
     }
 
     function getNumStorage(){
+      numBrews=0;
+      x=0;
         while(localStorage.getItem("brew"+x)!=null){
           numBrews++;
           x++;
@@ -52,18 +53,23 @@ $(document).ready(function() {
 
 
     function fixStorage(){
-      for(var i=0;i<numBrews;i++){
-        
-        if(localStorage.getItem("brew"+i)=="null"){
-          
-          for(var j = i;j<numBrews;j++){
-            localStorage.setItem("brew"+j,localStorage.getItem("brew"+(j+1)));
+      var i=0;
+      for(var j=0;j<numBrews;j++){
+        if(localStorage.getItem("brew"+j)!="null"){
+          localStorage.setItem("brew"+i,localStorage.getItem("brew"+j))
+          if(i!=j){
+            localStorage.removeItem("brew"+j);
           }
-          numBrews--;
-          localStorage.removeItem("brew"+numBrews);
+          i++;
+        }
+        else{
+          localStorage.removeItem("brew"+j);
         }
       }
-      indexListCreate();
+      
+      numBrews=i;
+      
+     
     }
 
     function indexListCreate(){
@@ -108,8 +114,20 @@ $(document).ready(function() {
       }
     }
     
+    function checkForRepeats(){
+      for(var i=0;i<numBrews;i++){
+        for(var j=0;j<numBrews;j++){
+          if(localStorage.getItem("brew"+i)==localStorage.getItem("brew"+j) && i!=j){
+            localStorage.setItem("brew"+j,"null");
+          }
+        }
+      }
+      fixStorage();
+    }
 
     createDropdown();
+
+
 
     $("#form-submit").on("click", function() {
         event.preventDefault();
@@ -166,14 +184,15 @@ $(document).ready(function() {
 
     $("#result-submit").on("click", function() {
       event.preventDefault();
+      getNumStorage();
       for(var i=0;i<numResults;i++){
     
         if($('#checkbox'+i).prop('checked')){
-          
           localStorage.setItem("brew"+numBrews,JSON.stringify(results[i]));
           numBrews++;
         }
       }
+      checkForRepeats();
     });
 
     $("#remove-button").on("click", function() {
@@ -182,11 +201,12 @@ $(document).ready(function() {
     
         if($('#checkbox'+i).prop('checked')){
           
-          localStorage.setItem("brew"+i,null);
+          localStorage.setItem("brew"+i,"null");
           
         }
       }
       fixStorage();
+      indexListCreate();
     });
 
     $(document).on("click",".modalButton", function(e) {
@@ -207,21 +227,34 @@ $(document).ready(function() {
     function addMarkersToMap(map) {
      
       for(var i=0;i< numBrews;i++) {
-        let currentBrewery = JSON.parse(localStorage.getItem('brew'+ i))
-        console.log(currentBrewery)
-        let latitude = currentBrewery.latitude
-        let longitude = currentBrewery.longitude
-        console.log(currentBrewery.longitude)
-        let stop = new H.map.Marker({lat:latitude, lng:longitude});
-        map.addObject(stop);
+        if(localStorage.getItem("brew"+i)!="null"){
+          let currentBrewery = JSON.parse(localStorage.getItem('brew'+ i))
+          
+          let latitude = currentBrewery.latitude
+          let longitude = currentBrewery.longitude
+          
+          let stop = new H.map.Marker({lat:latitude, lng:longitude});
+          map.addObject(stop);
+        }
       }
     }
 
       function centerMap(){
-        var temp = JSON.parse(localStorage.getItem("brew0"))
-         startLatitude = temp.latitude;
-         startLongitude = temp.longitude
-      
+        if(localStorage.getItem("brew0")){
+          if(localStorage.getItem("brew0")!="null"){
+          var temp = JSON.parse(localStorage.getItem("brew0"))
+          startLatitude = temp.latitude;
+          startLongitude = temp.longitude
+          }
+          else{
+            startLatitude=36.1627;
+            startLongitude=-86.7816;
+          }
+        }
+        else{
+          startLatitude=36.1627;
+          startLongitude=-86.7816;
+        }
         
             /**
      * Boilerplate map initialization code starts below:
@@ -265,9 +298,9 @@ $(document).ready(function() {
 
     getNumStorage();
     indexListCreate();
-    centerMap();
-    addMarkersToMap(map);
-
+      centerMap();
+      addMarkersToMap(map);
+    
 });
 
 
