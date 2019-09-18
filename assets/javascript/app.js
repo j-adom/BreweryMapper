@@ -84,6 +84,9 @@ $(document).ready(function() {
   
         // holderBody.append(holderRow);
   
+        var holderNumber = $("<td>");
+        holderNumber.text(i+1);
+
         var holderName = $("<td>");
         holderName.text(getResults.name);
   
@@ -104,6 +107,7 @@ $(document).ready(function() {
         radio.append(input);
         
         holderRow.append(radio);
+        holderRow.append(holderNumber);
         holderRow.append(holderName);
         holderRow.append(holderState);
         holderRow.append(holderCity);
