@@ -21,6 +21,7 @@ var startLatitude;
 var startLongitude;
 var objectArray = [];
 var map;
+var imageCluster = "assets/images/pintscluster.jpg"
 
 $(document).ready(function() {
 
@@ -229,18 +230,29 @@ $(document).ready(function() {
 
     // Begin Map code
     function addMarkersToMap(map) {
-     
+     //Loop through list of breweries to make object containing latitude and longitude as well as svg icon corresponding to the number of the brewery
       for(var i=0;i< numBrews;i++) {
         if(localStorage.getItem("brew"+i)!="null"){
           let currentBrewery = JSON.parse(localStorage.getItem('brew'+ i))
           let latitude = currentBrewery.latitude
           let longitude = currentBrewery.longitude
-          objectArray.push({latitude: latitude, longitude: longitude})
+          
+          let svgMarkup = '<svg width="24" height="24" ' +
+            'xmlns="http://www.w3.org/2000/svg">' +
+            '<rect stroke="white" fill="#1b468d" x="1" y="1" width="22" ' +
+            'height="22" /><text x="12" y="18" font-size="12pt" ' +
+            'font-family="Arial" font-weight="bold" text-anchor="middle" ' +
+            'fill="white">'+i+1+'</text></svg>';
+        
+          let icon = new H.map.icon(svgMarkup)
+
+
+          objectArray.push({latitude: latitude, longitude: longitude},{icon: icon})
         }
       }
-        
+      console.log(objectArray) 
       var dataPoints = objectArray.map(function (item) {
-        return new H.clustering.DataPoint(item.latitude, item.longitude);
+        return new H.clustering.DataPoint(item.latitude, item.longitude, null, item);
       });
     
       // Create a clustering provider with custom options for clusterizing the input
@@ -250,8 +262,11 @@ $(document).ready(function() {
           eps: 8,
           // minimum weight of points required to form a cluster
           minWeight: 2
-        }
+        },
+        theme: CUSTOM_THEME
       });
+
+      clusteredDataProvider.addEventListener('tap', onMarkerClick);
 
       // Create a layer tha will consume objects from our clustering provider
       var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
@@ -260,6 +275,52 @@ $(document).ready(function() {
       // we need to add our layer to the map
       map.addLayer(clusteringLayer);
     }
+
+    // Custom clustering theme description object.
+    // Object should implement H.clustering.ITheme interface
+    var CUSTOM_THEME = {
+      getClusterPresentation: function(cluster) {
+        
+        // Set cluster marker to pints image
+        var clusterMarker = new H.map.Marker(cluster.getPosition(), {
+          icon: new H.map.Icon(imageCluster, {
+            size: {w: 50, h: 50},
+            anchor: {x: 25, y: 25}
+          }),
+
+          // Set min/max zoom with values from the cluster,
+          // otherwise clusters will be shown at all zoom levels:
+          min: cluster.getMinZoom(),
+          max: cluster.getMaxZoom()
+        });
+
+        // Link data from the cluster to the marker,
+        // to make it accessible inside onMarkerClick
+        clusterMarker.setData(cluster);
+
+        return clusterMarker;
+      },
+      getNoisePresentation: function (noisePoint) {
+        // Get a reference to data object our noise points
+        var data = noisePoint.getData(),
+          // Create a marker for the noisePoint
+          noiseMarker = new H.map.Marker(noisePoint.getPosition(), {
+            // Use min zoom from a noise point
+            // to show it correctly at certain zoom levels:
+            min: noisePoint.getMinZoom(),
+            icon: new H.map.Icon(data.icon, {
+              size: {w: 20, h: 20},
+              anchor: {x: 10, y: 10}
+            })
+          });
+
+        // Link a data from the point to the marker
+        // to make it accessible inside onMarkerClick
+        noiseMarker.setData(data);
+
+        return noiseMarker;
+      }
+    };
 
       function centerMap(){
         if(localStorage.getItem("brew0")){
